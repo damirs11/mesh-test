@@ -1,0 +1,65 @@
+<ng-container *ngIf="state == 'GRID'">
+  <button type="button" class="btn btn-primary" (click)="create()">create</button>
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">name</th>
+      <th scope="col">description</th>
+      <th scope="col">price</th>
+      <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of (products$ | async)">
+      <th>{{product.id}}</th>
+      <td>{{product.name}}</td>
+      <td>{{product.description}}</td>
+      <td>{{product.price | currency : '$' : true}}</td>
+      <td>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" (click)="update(product)">U</button>
+          <button type="button" class="btn btn-danger" (click)="remove(product.id)">R</button>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</ng-container>
+
+
+<ng-container *ngIf="state == 'FORM'">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="btn-group">
+      <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Save</button>
+      <button type="button" class="btn btn-primary" (click)="changeView('GRID')">X</button>
+    </div>
+    <div class="form-group">
+      <label>Name</label>
+      <input class="form-control" name="name" formControlName="name"/>
+
+      <div class="alert alert-danger" *ngIf="form.controls['name'].errors?.['required']">
+        Name is empty!
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Price</label>
+      <input class="form-control" name="price" formControlName="price"/>
+
+      <div class="alert alert-danger"
+           *ngIf="form.controls['price'].errors?.['required']">
+        Price is empty!
+      </div>
+      <div class="alert alert-danger"
+           *ngIf="form.controls['price'].errors?.['pattern']">
+        Only numbers allowed
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Description</label>
+      <input class="form-control" name="description" formControlName="description"/>
+    </div>
+  </form>
+</ng-container>
